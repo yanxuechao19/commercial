@@ -15,7 +15,6 @@ public class ClickSource implements  SourceFunction<Event>{
         String[] url={"./home", "./cart", "./fav", "./prod?id=1", "./prod?id=2"};
         while (running){
             sourceContext.collect(new Event(users[random.nextInt(users.length)],url[random.nextInt(url.length)], Calendar.getInstance().getTimeInMillis()));
-
         }
 
     }
