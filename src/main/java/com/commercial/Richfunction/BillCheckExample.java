@@ -50,7 +50,7 @@ public class BillCheckExample {
 
             @Override
             public void processElement1(Tuple3<String, String, Long> value, CoProcessFunction<Tuple3<String, String, Long>, Tuple3<String, String, Long>, String>.Context ctx, Collector<String> out) throws Exception {
-                if (third_party != null) {
+                if (third_party.value() != null) {
                     out.collect("对账成功" + value.f0);
                     third_party.clear();
                 } else {
@@ -61,7 +61,7 @@ public class BillCheckExample {
 
             @Override
             public void processElement2(Tuple3<String, String, Long> value, CoProcessFunction<Tuple3<String, String, Long>, Tuple3<String, String, Long>, String>.Context ctx, Collector<String> out) throws Exception {
-                if (app != null) {
+                if (app.value() != null) {
                     out.collect("对账成功" + value.f0);
                     app.clear();
                 } else {
@@ -77,7 +77,7 @@ public class BillCheckExample {
                     out.collect("对账成功" + app);
                     app.clear();
                 } else {
-                    out.collect("对账失败" + app);
+                    out.collect("对账失败" + app.toString());
                 }
 
 
@@ -86,7 +86,7 @@ public class BillCheckExample {
                     third_party.clear();
                 } else {
 
-                    out.collect("对账失败" + third_party);
+                    out.collect("对账失败" + third_party.toString());
                 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
