@@ -92,8 +92,8 @@
           </execution>
         </executions>
           <configuration>
-              <source>6</source>
-              <target>6</target>
+              <source>1.8</source>
+              <target>1.8</target>
           </configuration>
       </plugin>
     </plugins>
