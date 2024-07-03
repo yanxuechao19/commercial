@@ -34,16 +34,16 @@ public class CommercialReduce {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         // 创建一个DecimalFormat对象，设置保留四位小数
         DecimalFormat df = new DecimalFormat("#.####");
-        // TODO 3. 读取业务主流
+        // TODO 1. 读取业务主流
         String topic = "growalong_prod";
         String groupId = "growalong_prod_0702";
-        //DataStreamSource<String> gmallDS = env.addSource(KafkaUtil.getKafkaConsumer(topic, groupId));
-        DataStreamSource<String> gmallDS = env.readTextFile("D:\\code\\commercial\\input\\user_coin_log.txt");
+        //DataStreamSource<String> coinDs = env.addSource(KafkaUtil.getKafkaConsumer(topic, groupId));
+        DataStreamSource<String> coinDs = env.readTextFile("D:\\code\\commercial\\input\\user_coin_log.txt");
 
-        // TODO 4. 主流数据结构转换
-        SingleOutputStreamOperator<JSONObject> jsonDS = gmallDS.map( JSON::parseObject);
+        // TODO 2. 主流数据结构转换
+        SingleOutputStreamOperator<JSONObject> jsonDS = coinDs.map( JSON::parseObject);
 
-        // TODO 5. 主流 ETL
+        // TODO 3. 主流 ETL
         SingleOutputStreamOperator<JSONObject> filterDS = jsonDS.filter(
                 jsonObj ->
                 {
@@ -58,12 +58,14 @@ public class CommercialReduce {
                     }
                 });
         filterDS.print();
+        // TODO 4. 主流获取需要的字段
         SingleOutputStreamOperator<Double> mapstram = filterDS.map(new MapFunction<JSONObject, Double>() {
             @Override
             public Double map(JSONObject value) throws Exception {
                 return value.getJSONObject("data").getDouble("balance");
             }
         });
+        // TODO 5. 对获取的字段进行聚合
         SingleOutputStreamOperator<Double> rs = mapstram.keyBy(key -> true).reduce(new ReduceFunction<Double>() {
 
             @Override
